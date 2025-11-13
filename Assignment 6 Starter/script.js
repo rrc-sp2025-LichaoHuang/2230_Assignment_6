@@ -149,7 +149,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Event listeners for form submission and new player button
     form.addEventListener("submit", (event) => {
-        const usernameInput = document.getElementById("username");
+
+        event.preventDefault();
+
+        const usernameInput = document.getElementById("username")
         const username = usernameInput.value.trim();
 
         // 1. Check if the username is empty.
@@ -163,7 +166,7 @@ document.addEventListener("DOMContentLoaded", () => {
         if (!existingCookie) {
             setCookie("username", username, 7); // 保存 7 天
         }
-        
+
         checkUserSession();
     });
 

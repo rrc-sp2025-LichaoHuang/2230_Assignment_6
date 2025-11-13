@@ -11,6 +11,32 @@ document.addEventListener("DOMContentLoaded", () => {
     displayQuestions();
     // displayScores();
 
+
+/**
+ * set and get cookies.
+ */
+function setCookie(name, value, days) {
+    const date = new Date();
+    date.setDate(date.getDate() + days);
+    const expires = "expires=" + date.toUTCString();
+    document.cookie = `${name}=${value}; ${expires}; path=/`;
+}
+
+function getCookie(name) {
+    const target = name + "=";
+    const cookies = document.cookie.split(";");
+
+    for (let i = 0; i < cookies.length; i++) {
+        const c = cookies[i].trim();
+        if (c.indexOf(target) === 0) {
+            return c.substring(target.length, c.length);
+        }
+    }
+    return "";
+}
+
+
+
     /**
      * Fetches trivia questions from the API and displays them.
      */
@@ -106,3 +132,4 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
 });
+

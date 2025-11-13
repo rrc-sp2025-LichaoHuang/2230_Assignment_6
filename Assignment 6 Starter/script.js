@@ -23,7 +23,7 @@ function getCookie(name) {
 
 
 /**
- * Checks if a username cookie exists and updates the UI.
+ * Checks if a username cookie exists or not
  */
 function checkUserSession() {
     const usernameInput = document.getElementById("username");
@@ -36,7 +36,7 @@ function checkUserSession() {
         usernameInput.value = savedName;
         newPlayerButton.classList.remove("hidden");
     } else {
-        // username not exist
+        // username is not exist
         usernameInput.value = "";
         newPlayerButton.classList.add("hidden");
     }

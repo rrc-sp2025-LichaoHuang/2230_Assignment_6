@@ -9,16 +9,10 @@ function setCookie(name, value, days) {
 }
 
 function getCookie(name) {
-    const target = name + "=";
-    const cookies = document.cookie.split(";");
-
-    for (let i = 0; i < cookies.length; i++) {
-        const cookieEntry = cookies[i].trim();
-        if (cookieEntry.indexOf(target) === 0) {
-            return cookieEntry.substring(target.length, cookieEntry.length);
-        }
-    }
-    return "";
+    return document.cookie
+        .split("; ")
+        .find((row) => row.startsWith(`${name}=`))
+        ?.split("=")[1] || "";
 }
 
 
@@ -29,11 +23,11 @@ function checkUserSession() {
     const usernameInput = document.getElementById("username");
     const newPlayerButton = document.getElementById("new-player");
 
+    //Check if a username exists in the cookie.
     const savedName = getCookie("username");
 
     if (savedName) {
         // username exist
-        usernameInput.value = savedName;
         newPlayerButton.classList.remove("hidden");
     } else {
         // username is not exist
@@ -119,6 +113,10 @@ function displayScores() {
 }
 
 
+function deleteCookie(name) {
+    document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/`;
+}
+
 
 /**
  * Initializes the Trivia Game when the DOM is fully loaded.
@@ -135,7 +133,7 @@ document.addEventListener("DOMContentLoaded", () => {
     // Initialize the game
     // checkUsername(); Uncomment once completed
     displayQuestions();
-    // displayScores();
+    displayScores();
 
 
 
@@ -249,12 +247,21 @@ document.addEventListener("DOMContentLoaded", () => {
 
         const score = calculateScore();
         console.log("Score:", score);
+
+        saveScore(username, score);
+        displayScores();
     });
 
     
     
     newPlayerButton.addEventListener("click", (event) => {
+        deleteCookie("username");
 
+        document.getElementById("username").value = "";
+
+        newPlayerButton.classList.add("hidden");
+
+        alert("Player reset. Enter a new name to continue.");
     })
 
 

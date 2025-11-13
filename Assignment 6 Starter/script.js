@@ -149,8 +149,23 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Event listeners for form submission and new player button
     form.addEventListener("submit", (event) => {
+        const usernameInput = document.getElementById("username");
+        const username = usernameInput.value.trim();
 
-    })
+        // 1. Check if the username is empty.
+        if (!username) {
+            alert("Please enter your name before submitting.");
+            return;
+        }
+
+        // 2. If the cookie does not yet have this username, then save a cookie use this username.
+        const existingCookie = getCookie("username");
+        if (!existingCookie) {
+            setCookie("username", username, 7); // 保存 7 天
+        }
+        
+        checkUserSession();
+    });
 
     newPlayerButton.addEventListener("click", (event) => {
 

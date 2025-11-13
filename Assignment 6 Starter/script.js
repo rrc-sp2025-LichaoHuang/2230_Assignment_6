@@ -66,6 +66,58 @@ function calculateScore() {
     return score;
 }
 
+/**
+ * Saves the user's score into localStorage without overwriting existing scores.
+ */
+function saveScore(username, score) {
+    const storedScores = localStorage.getItem("scores");
+
+    let scores = [];
+
+    if (storedScores) {
+        scores = JSON.parse(storedScores);
+    }
+
+
+    scores.push({
+        username: username,
+        score: score
+    });
+
+
+    localStorage.setItem("scores", JSON.stringify(scores));
+}
+
+
+/**
+ * Displays all saved scores inside the score table.
+ */
+function displayScores() {
+    const storedScores = localStorage.getItem("scores");
+    const tableBody = document.querySelector("#score-table tbody");
+
+    // clean table
+    tableBody.innerHTML = "";
+
+    if (!storedScores) {
+        return;
+    }
+
+    const scores = JSON.parse(storedScores);
+
+    // Use a loop to display all scores.
+    for (let i = 0; i < scores.length; i++) {
+        const row = document.createElement("tr");
+
+        row.innerHTML = `
+            <td>${scores[i].username}</td>
+            <td>${scores[i].score}</td>
+        `;
+
+        tableBody.appendChild(row);
+    }
+}
+
 
 
 /**

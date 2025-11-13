@@ -43,6 +43,30 @@ function checkUserSession() {
 }
 
 
+/**
+ * Calculates the user's score based on selected answers.
+ */
+function calculateScore() {
+    let score = 0;
+
+    for (let i = 0; i < 10; i++) {
+        const selectedOption = document.querySelector(`input[name="answer${i}"]:checked`);
+
+        if (!selectedOption) {
+            continue;
+        }
+
+        const isCorrect = selectedOption.getAttribute("data-correct");
+
+        if (isCorrect === "true") {
+            score++;
+        }
+    }
+
+    return score;
+}
+
+
 
 /**
  * Initializes the Trivia Game when the DOM is fully loaded.
@@ -53,6 +77,8 @@ document.addEventListener("DOMContentLoaded", () => {
     const newPlayerButton = document.getElementById("new-player");
 
     checkUserSession()
+
+
 
     // Initialize the game
     // checkUsername(); Uncomment once completed
@@ -164,12 +190,17 @@ document.addEventListener("DOMContentLoaded", () => {
         // 2. If the cookie does not yet have this username, then save a cookie use this username.
         const existingCookie = getCookie("username");
         if (!existingCookie) {
-            setCookie("username", username, 7); // 保存 7 天
-        }
+            setCookie("username", username, 7);
+        } 
 
         checkUserSession();
+
+        const score = calculateScore();
+        console.log("Score:", score);
     });
 
+    
+    
     newPlayerButton.addEventListener("click", (event) => {
 
     })

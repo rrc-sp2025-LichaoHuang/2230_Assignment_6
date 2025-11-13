@@ -1,18 +1,4 @@
 /**
- * Initializes the Trivia Game when the DOM is fully loaded.
- */
-document.addEventListener("DOMContentLoaded", () => {
-    const form = document.getElementById("trivia-form");
-    const questionContainer = document.getElementById("question-container");
-    const newPlayerButton = document.getElementById("new-player");
-
-    // Initialize the game
-    // checkUsername(); Uncomment once completed
-    displayQuestions();
-    // displayScores();
-
-
-/**
  * set and get cookies.
  */
 function setCookie(name, value, days) {
@@ -27,13 +13,53 @@ function getCookie(name) {
     const cookies = document.cookie.split(";");
 
     for (let i = 0; i < cookies.length; i++) {
-        const c = cookies[i].trim();
-        if (c.indexOf(target) === 0) {
-            return c.substring(target.length, c.length);
+        const cookieEntry = cookies[i].trim();
+        if (cookieEntry.indexOf(target) === 0) {
+            return cookieEntry.substring(target.length, cookieEntry.length);
         }
     }
     return "";
 }
+
+
+/**
+ * Checks if a username cookie exists and updates the UI.
+ */
+function checkUserSession() {
+    const usernameInput = document.getElementById("username");
+    const newPlayerButton = document.getElementById("new-player");
+
+    const savedName = getCookie("username");
+
+    if (savedName) {
+        // username exist
+        usernameInput.value = savedName;
+        newPlayerButton.classList.remove("hidden");
+    } else {
+        // username not exist
+        usernameInput.value = "";
+        newPlayerButton.classList.add("hidden");
+    }
+}
+
+
+
+/**
+ * Initializes the Trivia Game when the DOM is fully loaded.
+ */
+document.addEventListener("DOMContentLoaded", () => {
+    const form = document.getElementById("trivia-form");
+    const questionContainer = document.getElementById("question-container");
+    const newPlayerButton = document.getElementById("new-player");
+
+    checkUserSession()
+
+    // Initialize the game
+    // checkUsername(); Uncomment once completed
+    displayQuestions();
+    // displayScores();
+
+
 
 
 

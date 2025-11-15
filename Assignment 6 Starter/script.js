@@ -229,7 +229,7 @@ document.addEventListener("DOMContentLoaded", () => {
         event.preventDefault();
 
         const usernameInput = document.getElementById("username")
-        const username = usernameInput.value.trim();
+        const username = usernameInput.value
 
         // 1. Check if the username is empty.
         if (!username) {

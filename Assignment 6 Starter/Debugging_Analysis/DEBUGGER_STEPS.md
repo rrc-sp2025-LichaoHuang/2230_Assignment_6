@@ -24,28 +24,37 @@ The program correctly detects the empty username, blocks the submission process,
 
 ## Breakpoint 2 — Submit a valid name
 
-**Location:**
+**Location:**const existingCookie = getCookie("username");
 **Purpose:**
+To confirm that when a valid username is entered:
+
+    The username cookie is correctly created (if not already existing).
+
+    The score is successfully saved into localStorage.
+
+    The score table updates and displays the new entry properly.
 
 **Screenshots:**  
 - `breakpoint2_before.png`:
 - `breakpoint2_after.png`:
 
 **Observation:**  
-
+The program behaves correctly when given a valid username. A cookie is stored, the score is logged in localStorage, and the table updates without issues.
 
 ---
 
 ## Breakpoint 3 — Check talent selection
 
-**Location:** 
+**Location:** const selectedOption = document.querySelector(`input[name="answer${i}"]:checked`);
 **Purpose:** 
+To inspect whether the score calculation accurately detects which option is selected and correctly increments the score when the option has data-correct="true".
+
 **Screenshots:**  
 - `breakpoint3_before.png`:
 - `breakpoint3_after.png`:
 
 **Observation:**  
-
+The score calculation works correctly. Each selected answer is properly detected, and correct answers increment the score. This confirms that the scoring logic is functioning as intended.
 
 ---
 

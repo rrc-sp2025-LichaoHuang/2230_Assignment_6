@@ -1,4 +1,124 @@
 /**
+ * set and get cookies.
+ */
+function setCookie(name, value, days) {
+    const date = new Date();
+    date.setDate(date.getDate() + days);
+    const expires = "expires=" + date.toUTCString();
+    document.cookie = `${name}=${value}; ${expires}; path=/`;
+}
+
+function getCookie(name) {
+    return document.cookie
+        .split("; ")
+        .find((row) => row.startsWith(`${name}=`))
+        ?.split("=")[1] || "";
+}
+
+
+/**
+ * Checks if a username cookie exists or not
+ */
+function checkUserSession() {
+    const usernameInput = document.getElementById("username");
+    const newPlayerButton = document.getElementById("new-player");
+
+    //Check if a username exists in the cookie.
+    const savedName = getCookie("username");
+
+    if (savedName) {
+        // username exist
+        newPlayerButton.classList.remove("hidden");
+    } else {
+        // username is not exist
+        usernameInput.value = "";
+        newPlayerButton.classList.add("hidden");
+    }
+}
+
+
+/**
+ * Calculates the user's score based on selected answers.
+ */
+function calculateScore() {
+    let score = 0;
+
+    for (let i = 0; i < 10; i++) {
+        const selectedOption = document.querySelector(`input[name="answer${i}"]:checked`);
+
+        if (!selectedOption) {
+            continue;
+        }
+
+        const isCorrect = selectedOption.getAttribute("data-correct");
+
+        if (isCorrect === "true") {
+            score++;
+        }
+    }
+
+    return score;
+}
+
+/**
+ * Saves the user's score into localStorage without overwriting existing scores.
+ */
+function saveScore(username, score) {
+    const storedScores = localStorage.getItem("scores");
+
+    let scores = [];
+
+    if (storedScores) {
+        scores = JSON.parse(storedScores);
+    }
+
+
+    scores.push({
+        username: username,
+        score: score
+    });
+
+
+    localStorage.setItem("scores", JSON.stringify(scores));
+}
+
+
+/**
+ * Displays all saved scores inside the score table.
+ */
+function displayScores() {
+    const storedScores = localStorage.getItem("scores");
+    const tableBody = document.querySelector("#score-table tbody");
+
+    // clean table
+    tableBody.innerHTML = "";
+
+    if (!storedScores) {
+        return;
+    }
+
+    const scores = JSON.parse(storedScores);
+
+    // Use a loop to display all scores.
+    for (let i = 0; i < scores.length; i++) {
+        const row = document.createElement("tr");
+
+        row.innerHTML = `
+            <td>${scores[i].username}</td>
+            <td>${scores[i].score}</td>
+        `;
+
+        tableBody.appendChild(row);
+    }
+}
+
+
+function deleteCookie(name) {
+    document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/`;
+}
+
+
+/**
  * Initializes the Trivia Game when the DOM is fully loaded.
  */
 document.addEventListener("DOMContentLoaded", () => {
@@ -6,10 +126,18 @@ document.addEventListener("DOMContentLoaded", () => {
     const questionContainer = document.getElementById("question-container");
     const newPlayerButton = document.getElementById("new-player");
 
+    checkUserSession()
+
+
+
     // Initialize the game
     // checkUsername(); Uncomment once completed
     displayQuestions();
-    // displayScores();
+    displayScores();
+
+
+
+
 
     /**
      * Fetches trivia questions from the API and displays them.
@@ -98,11 +226,44 @@ document.addEventListener("DOMContentLoaded", () => {
     // Event listeners for form submission and new player button
     form.addEventListener("submit", (event) => {
 
-    })
+        event.preventDefault();
 
+        const usernameInput = document.getElementById("username")
+        const username = usernameInput.value
+
+
+        if (!username) {
+            alert("Please enter your name before submitting.");
+            return;
+        }
+
+
+        const existingCookie = getCookie("username");
+        if (!existingCookie) {
+            setCookie("username", username, 7);
+        } 
+
+        checkUserSession();
+
+        const score = calculateScore();
+        console.log("Score:", score);
+
+        saveScore(username, score);
+        displayScores();
+    });
+
+    
+    
     newPlayerButton.addEventListener("click", (event) => {
+        deleteCookie("username");
 
+        document.getElementById("username").value = "";
+
+        newPlayerButton.classList.add("hidden");
+
+        alert("Player reset. Enter a new name to continue.");
     })
 
 
 });
+
